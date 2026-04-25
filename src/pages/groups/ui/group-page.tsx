@@ -1,35 +1,66 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
-import { GroupContactsCard, selectGroupContactsItems } from '@entities/group';
+import { GroupContactsCard, type GroupContactsDto } from '@entities/group';
 import { Empty } from '@shared/ui/empty';
-import { ContactCard, selectContactsItems } from '@entities/contact';
+import { ContactCard, type ContactDto } from '@entities/contact';
 import { useAppDispatch, useAppSelector } from '@app/store';
 import {
   selectFavoriteContactIds,
   toggleFavoriteContactId,
 } from '@entities/favorites';
+import { useGetContactsQuery, useGetGroupsQuery } from '@shared/api';
+
+const EMPTY_CONTACTS: ContactDto[] = [];
+const EMPTY_GROUP_CONTACTS: GroupContactsDto[] = [];
 
 export const GroupPage = (): React.JSX.Element => {
   const { groupId } = useParams<{ groupId: string }>();
   const dispatch = useAppDispatch();
-  const contacts = useAppSelector(selectContactsItems);
-  const groupContactsList = useAppSelector(selectGroupContactsItems);
+  const contactsQuery = useGetContactsQuery();
+  const groupsQuery = useGetGroupsQuery();
   const favoriteContactIds = useAppSelector(selectFavoriteContactIds);
 
-  const groupContacts = groupContactsList.find((currentGroup) => {
-    return currentGroup.id === (groupId ?? '');
-  });
+  const contacts = contactsQuery.data ?? EMPTY_CONTACTS;
+  const groupContactsList = groupsQuery.data ?? EMPTY_GROUP_CONTACTS;
+  const selectedGroupId = groupId ?? '';
+  const isDataLoading = contactsQuery.isLoading || groupsQuery.isLoading;
+  const hasDataLoadingError = contactsQuery.isError || groupsQuery.isError;
+  const groupContacts = useMemo(() => {
+    return groupContactsList.find((currentGroup) => {
+      return currentGroup.id === selectedGroupId;
+    });
+  }, [groupContactsList, selectedGroupId]);
 
-  const groupContactsMembers = groupContacts
-    ? contacts.filter((contact) =>
-        groupContacts.contactIds.includes(contact.id),
-      )
-    : [];
+  const groupContactsMembers = useMemo(() => {
+    if (!groupContacts) {
+      return [];
+    }
+
+    return contacts.filter((contact) => {
+      return groupContacts.contactIds.includes(contact.id);
+    });
+  }, [contacts, groupContacts]);
 
   const handleToggleFavorite = (contactId: string) => {
     dispatch(toggleFavoriteContactId(contactId));
   };
+
+  if (isDataLoading) {
+    return (
+      <Row>
+        <Col>Загрузка группы...</Col>
+      </Row>
+    );
+  }
+
+  if (hasDataLoadingError) {
+    return (
+      <Row>
+        <Col>Не удалось загрузить группу или контакты.</Col>
+      </Row>
+    );
+  }
 
   return (
     <Row className="g-4">

@@ -1,10 +1,32 @@
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
-import { GroupContactsCard, selectGroupContactsItems } from '@entities/group';
-import { useAppSelector } from '@app/store';
+import { GroupContactsCard } from '@entities/group';
+import { Empty } from '@shared/ui/empty';
+import { useGetGroupsQuery } from '@shared/api';
 
 export const GroupListPage = (): React.JSX.Element => {
-  const groupContactsList = useAppSelector(selectGroupContactsItems);
+  const groupsQuery = useGetGroupsQuery();
+  const groupContactsList = groupsQuery.data ?? [];
+
+  if (groupsQuery.isLoading) {
+    return (
+      <Row>
+        <Col>Загрузка групп...</Col>
+      </Row>
+    );
+  }
+
+  if (groupsQuery.isError) {
+    return (
+      <Row>
+        <Col>Не удалось загрузить группы.</Col>
+      </Row>
+    );
+  }
+
+  if (groupContactsList.length === 0) {
+    return <Empty />;
+  }
 
   return (
     <Row xxl={4}>

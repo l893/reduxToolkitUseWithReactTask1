@@ -1,12 +1,10 @@
-import { combineReducers } from 'redux';
-import { contactsReducer } from '@entities/contact/model/contacts';
-import { groupsReducer } from '@entities/group/model/groups';
+import { combineReducers } from '@reduxjs/toolkit';
 import { favoritesReducer } from '@entities/favorites/model/favorites';
 import { filtersReducer } from '@features/filters/model/filters';
+import { contactsApi } from '@shared/api';
 
 export const rootReducer = combineReducers({
-  contacts: contactsReducer,
-  groups: groupsReducer,
+  [contactsApi.reducerPath]: contactsApi.reducer,
   favorites: favoritesReducer,
   filters: filtersReducer,
 });
