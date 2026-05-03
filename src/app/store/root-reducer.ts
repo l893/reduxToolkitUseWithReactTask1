@@ -1,6 +1,6 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import { favoritesReducer } from '@entities/favorites';
-import { filtersReducer } from '@features/filters';
+import { filtersReducer } from '@features/contact-filters';
 import { contactsApi } from '@shared/api';
 
 export const rootReducer = combineReducers({

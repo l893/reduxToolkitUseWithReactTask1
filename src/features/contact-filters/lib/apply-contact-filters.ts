@@ -1,6 +1,6 @@
 import type { ContactDto } from '@entities/contact';
 import type { GroupContactsDto } from '@entities/group';
-import type { FiltersState } from '@features/filters/model/filters';
+import type { FiltersState } from '../model/filters';
 
 interface ApplyContactFiltersParams {
   contacts: ContactDto[];

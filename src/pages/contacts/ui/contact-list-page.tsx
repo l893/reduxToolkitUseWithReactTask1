@@ -9,7 +9,7 @@ import {
   resetFilters,
   selectFilters,
   setFilters,
-} from '@features/filters';
+} from '@features/contact-filters';
 import { useAppDispatch, useAppSelector } from '@app/store';
 import {
   selectFavoriteContactIds,
