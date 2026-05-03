@@ -1,5 +1,6 @@
 export type { FavoriteContactsDto } from './model/types';
 export {
+  favoritesReducer,
   selectFavoriteContactIds,
   selectIsFavorite,
   setFavoriteContactIds,
