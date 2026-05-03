@@ -133,7 +133,7 @@ Server state хранится в RTK Query cache:
 Client-side состояние хранится в обычных Redux Toolkit slices:
 
 - `favorites` — список id избранных контактов
-- `filters` — значения фильтрации контактов
+- `filters` — значения фильтрации контактов, model фичи `contact-filters`
 
 `favorites` сохраняется в `localStorage` через `redux-persist`.
 
@@ -164,9 +164,11 @@ getDefaultMiddleware().concat(contactsApi.middleware, metricsMiddleware);
 - `src/app/` — инициализация приложения, store, Provider
 - `src/pages/` — страницы приложения
 - `src/widgets/` — крупные UI-блоки: Layout, Menu, Breadcrumbs
-- `src/features/` — пользовательские сценарии и фичи: filters
+- `src/features/` — пользовательские сценарии и фичи: contact-filters
 - `src/entities/` — доменные сущности: contact, group, favorites
 - `src/shared/` — общие API, конфиги, утилиты и UI
+
+`contact-filters` расположен в `features`, потому что фильтрация контактов — это пользовательский сценарий, а не самостоятельная доменная сущность.
 
 ### Aliases
 
